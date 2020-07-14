@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useFonts } from "@use-expo/font";
 import {
   StyleSheet,
   Text,
@@ -8,6 +9,8 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
+
+import { AppLoading } from "expo";
 import firebase from "firebase";
 import Header from "./components/header";
 import LogIn from "./components/login";
@@ -30,13 +33,23 @@ const auth = firebase.auth();
 
 export default function App() {
   const [user, setUser] = useState(true);
-  const [signingUp, setSigningUp] = useState(false);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
     });
   }, []);
+
+  let [fontsLoaded] = useFonts({
+    "Lato-Light": require("./assets/fonts/Lato-Light.ttf"),
+    "Lato-Regular": require("./assets/fonts/Lato-Regular.ttf"),
+    "Lato-Bold": require("./assets/fonts/Lato-Bold.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
   return (
     <>
       <Header user={user} />
@@ -54,12 +67,7 @@ export default function App() {
               {user ? (
                 <Text>Hello, {user.uid}</Text>
               ) : (
-                <LogIn
-                  user={user}
-                  setUser={setUser}
-                  signingUp={signingUp}
-                  setSigningUp={setSigningUp}
-                />
+                <LogIn user={user} setUser={setUser} />
               )}
             </View>
           </SafeAreaView>
@@ -71,7 +79,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#616aca",
+    backgroundColor: "#4F5ACE",
   },
 
   backgroundImage: {},

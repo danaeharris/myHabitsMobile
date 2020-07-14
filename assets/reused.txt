@@ -8,20 +8,19 @@ backgroundColor: "#616aca", //purple
 
 button styles: 
 button: {
-    display: "inline-block",
-    border: "none",
     borderRadius: 4,
     padding: 10,
     paddingHorizontal: 15,
-    margin: 0,
-    textDecoration: "none",
-    backgroundColor: "#616aca",
-    color: "#ffffff",
-    fontFamily: "Lato",
-    fontSize: 16,
-    cursor: "pointer",
+    marginVertical: 15,
+    marginHorizontal: 0,
+    backgroundColor: "#4F5ACE",
     textAlign: "center",
-  }
-
+    alignSelf: "center",
+  },
+  buttonText: {
+    color: "#ffffff",
+    //fontFamily: "Lato",
+    fontSize: 16,
+  },
 form styles:
 

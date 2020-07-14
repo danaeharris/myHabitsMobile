@@ -1,19 +1,28 @@
 import React, { useState } from "react";
 import firebase from "firebase";
-import { TextInput, Text, View, Image, TouchableHighlight } from "react-native";
+import {
+  TextInput,
+  Text,
+  View,
+  Image,
+  TouchableHighlight,
+  StyleSheet,
+} from "react-native";
 
-const LogIn = (user, setUser, signingUp, setSigningUp) => {
+const LogIn = ({ user, setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const [signingUp, setSigningUp] = useState(false);
 
   const attemptLogIn = () => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        //Router.push("/");
-      })
+      //.then(() => {
+      //Router.push("/");
+      // })
       .catch(function (error) {
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -24,11 +33,12 @@ const LogIn = (user, setUser, signingUp, setSigningUp) => {
   return (
     <>
       {signingUp ? (
-        <View /*style={} Log In Styles */>
-          <Text>Sign Up</Text>
-          <View>
+        <View style={styles.logIn}>
+          <View style={styles.textInput}>
             <Text>Email</Text>
             <TextInput
+              style={styles.input}
+              autoCapitalize="none"
               autoCompleteType="email"
               value={email}
               onChangeText={(text) => setEmail(text)}
@@ -37,12 +47,16 @@ const LogIn = (user, setUser, signingUp, setSigningUp) => {
           <View>
             <Text htmlFor="password">Password</Text>
             <TextInput
+              style={styles.input}
+              secureTextEntry={true}
+              autoCapitalize="none"
               autoCompleteType="password"
               value={password}
               onChangeText={(text) => setPassword(text)}
             ></TextInput>
           </View>
           <TouchableHighlight
+            style={styles.button}
             onPress={() => {
               firebase
                 .auth()
@@ -54,28 +68,27 @@ const LogIn = (user, setUser, signingUp, setSigningUp) => {
                   setError(errorMessage);
                 });
             }}
+            underlayColor="#3C44A3"
           >
-            Create an Account
+            <Text style={styles.buttonText}>Create an Account</Text>
           </TouchableHighlight>
-
-          <p style={{ color: "red" }}>{error ? error : ""}</p>
-          <a
-            href="#"
-            onPress={(e) => {
-              e.preventDefault();
+          <Text style={{ color: "red" }}>{error ? error : ""}</Text>
+          <TouchableHighlight
+            style={{ alignSelf: "center" }}
+            onPress={() => {
               setSigningUp(false);
             }}
           >
             <Text>Already have an account?</Text>
-          </a>
+          </TouchableHighlight>
         </View>
       ) : (
-        <View className="logIn">
-          <Text className="form-Text">Sign In</Text>
-
+        <View style={styles.logIn}>
           <View>
             <Text htmlFor="email">Email</Text>
             <TextInput
+              style={styles.input}
+              autoCapitalize="none"
               autoCompleteType="email"
               value={email}
               onChangeText={(text) => setEmail(text)}
@@ -84,32 +97,79 @@ const LogIn = (user, setUser, signingUp, setSigningUp) => {
           <View>
             <Text htmlFor="password">Password</Text>
             <TextInput
+              style={styles.input}
+              secureTextEntry={true}
+              autoCapitalize="none"
               autoCompleteType="password"
               value={password}
               onChangeText={(text) => setPassword(text)}
             ></TextInput>
           </View>
           <TouchableHighlight
+            style={styles.button}
             onPress={() => {
               attemptLogIn();
             }}
+            underlayColor="#3C44A3"
           >
-            <Text>Sign In</Text>
+            <Text style={styles.buttonText}>Log In</Text>
           </TouchableHighlight>
           <Text style={{ color: "red" }}>{error ? error : ""}</Text>
-          {/*<a
-            href="#"
-            onPress={(e) => {
-              e.preventDefault();
+          <TouchableHighlight
+            style={{ alignSelf: "center" }}
+            onPress={() => {
               setSigningUp(true);
             }}
           >
-            Don't have an account?
-          </a>
-        */}
+            <Text>Don't have an account?</Text>
+          </TouchableHighlight>
         </View>
       )}
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  logIn: {
+    backgroundColor: "#fafafa",
+    margin: 50,
+    height: 275,
+    width: 275,
+    padding: 10,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    borderRadius: 4,
+  },
+  input: {
+    marginRight: 10,
+    marginTop: 5,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#cccccc",
+    padding: 9,
+    borderRadius: 4,
+    width: 250,
+  },
+  textInput: {
+    fontSize: 16,
+    fontWeight: "400",
+  },
+  button: {
+    borderRadius: 4,
+    padding: 10,
+    paddingHorizontal: 15,
+    marginVertical: 15,
+    marginHorizontal: 0,
+    backgroundColor: "#4F5ACE",
+    textAlign: "center",
+    alignSelf: "center",
+  },
+  buttonText: {
+    color: "#ffffff",
+    fontFamily: "Lato-Regular",
+    fontSize: 16,
+  },
+});
+
 export default LogIn;
