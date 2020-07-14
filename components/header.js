@@ -1,15 +1,6 @@
 import firebase from "firebase";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  View,
-  ScrollView,
-  SafeAreaView,
-  Image,
-  ImageBackground,
-} from "react-native";
+import { TouchableHighlight, Text, View, Image } from "react-native";
 import React from "react";
 
 const Header = ({ user }) => {
@@ -36,27 +27,30 @@ const Header = ({ user }) => {
         <StatusBar style="dark" />
       </View>
       {user ? (
-        <TouchableOpacity
-          style={{
-            border: "none",
-            borderRadius: 4,
-            padding: 10,
-            paddingHorizontal: 15,
-            margin: 0,
-            textDecoration: "none",
-            backgroundColor: "#616aca",
-            color: "#ffffff",
-            fontFamily: "Lato",
-            fontSize: 16,
-            cursor: "pointer",
-            textAlign: "center",
-          }}
-          onPress={() => {
-            firebase.auth().signOut();
-          }}
-        >
-          Log Out
-        </TouchableOpacity>
+        <>
+          <TouchableHighlight
+            style={{
+              border: "none",
+              borderRadius: 4,
+              padding: 10,
+              paddingHorizontal: 15,
+              margin: 0,
+              textDecoration: "none",
+              backgroundColor: "#616aca",
+              color: "#ffffff",
+              fontFamily: "Lato",
+              fontSize: 16,
+              cursor: "pointer",
+              textAlign: "center",
+            }}
+            underlayColor="#38409a;"
+            onPress={() => {
+              firebase.auth().signOut();
+            }}
+          >
+            <Text>Log Out</Text>
+          </TouchableHighlight>
+        </>
       ) : null}
     </>
   );

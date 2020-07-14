@@ -29,7 +29,7 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(true);
   const [signingUp, setSigningUp] = useState(false);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function App() {
           <SafeAreaView>
             <View>
               {user ? (
-                <Text>Hello, {user}</Text>
+                <Text>Hello, {user.uid}</Text>
               ) : (
                 <LogIn
                   user={user}
