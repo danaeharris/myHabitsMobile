@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#4F5ACE",
   },
   inputContainer: {
-    margin: 20,
+    margin: 30,
     alignItems: "flex-start",
     position: "relative",
     backgroundColor: "#fafafa",
