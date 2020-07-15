@@ -43,8 +43,10 @@ const List = ({ listItems, setListItems, title, user }) => {
         .sort((a, b) => {
           return b.dateEdited - a.dateEdited;
         })
-        .filter((x) => x.type === title)
         .map((listItem, i) => {
+          if (listItem.type !== title) {
+            return null;
+          }
           let displayChecked = true;
           if (!listItem.doneDate) {
             displayChecked = false;
@@ -174,6 +176,7 @@ const List = ({ listItems, setListItems, title, user }) => {
                     accessibilityLabel="delete button"
                     accessibilityHint="deletes this to do item."
                     onPress={() => {
+                      console.log(listItem, i);
                       const firstListItems = [...listItems];
                       firstListItems.splice(i, 1);
                       setListItems(firstListItems);
