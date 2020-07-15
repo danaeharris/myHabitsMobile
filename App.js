@@ -14,6 +14,7 @@ import { AppLoading } from "expo";
 import firebase from "firebase";
 import Header from "./components/header";
 import LogIn from "./components/login";
+import ListContainer from "./components/listContainer";
 
 var firebaseConfig = {
   apiKey: "AIzaSyB94YmeDMN-o3JM8GW2BzfTeSRP9E2SMCs",
@@ -65,7 +66,10 @@ export default function App() {
           <SafeAreaView>
             <View>
               {user ? (
-                <Text>Hello, {user.uid}</Text>
+                <>
+                  <Text>Hello, {user.uid}</Text>
+                  <ListContainer user={user} />
+                </>
               ) : (
                 <LogIn user={user} setUser={setUser} />
               )}
