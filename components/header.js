@@ -11,9 +11,18 @@ const Header = ({ user }) => {
         backgroundColor: "#fafafa",
         alignItems: "flex-end",
         justifyContent: "space-between",
-        paddingTop: 35,
+        paddingTop: 60,
         paddingBottom: 10,
-        paddingHorizontal: 5,
+        paddingHorizontal: 30,
+        shadowColor: "#303569",
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
+        elevation: 4,
+        zIndex: 2,
       }}
     >
       <View style={{ flexDirection: "row" }}>
@@ -41,7 +50,6 @@ const Header = ({ user }) => {
               borderRadius: 4,
               padding: 10,
               paddingHorizontal: 15,
-              marginVertical: 15,
               marginHorizontal: 0,
               backgroundColor: "#4F5ACE",
               textAlign: "center",

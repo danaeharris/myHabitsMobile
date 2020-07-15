@@ -56,6 +56,9 @@ const LogIn = ({ user, setUser }) => {
             ></TextInput>
           </View>
           <TouchableHighlight
+            accessible={true}
+            accessibilityLabel="Create an account"
+            accessibilityHint="Submits your email and password to create an account."
             style={styles.button}
             onPress={() => {
               firebase
@@ -74,6 +77,9 @@ const LogIn = ({ user, setUser }) => {
           </TouchableHighlight>
           <Text style={{ color: "red" }}>{error ? error : ""}</Text>
           <TouchableHighlight
+            accessible={true}
+            accessibilityLabel="Already have an account"
+            accessibilityHint="Navigates you to the log in form."
             style={{ alignSelf: "center" }}
             onPress={() => {
               setSigningUp(false);
@@ -106,6 +112,9 @@ const LogIn = ({ user, setUser }) => {
             ></TextInput>
           </View>
           <TouchableHighlight
+            accessible={true}
+            accessibilityLabel="log in button"
+            accessibilityHint="logs you into the app."
             style={styles.button}
             onPress={() => {
               attemptLogIn();
@@ -116,6 +125,9 @@ const LogIn = ({ user, setUser }) => {
           </TouchableHighlight>
           <Text style={{ color: "red" }}>{error ? error : ""}</Text>
           <TouchableHighlight
+            accessible={true}
+            accessibilityLabel="Don't have an account"
+            accessibilityHint="Navigates you to the sign up form."
             style={{ alignSelf: "center" }}
             onPress={() => {
               setSigningUp(true);

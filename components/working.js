@@ -1,146 +1,207 @@
-import { useState, useEffect } from "react";
-import Select from "react-select";
 import firebase from "firebase";
-import List from "./List";
-import RNPickerSelect from "react-native-picker-select";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  SafeAreaView,
   Image,
-  ImageBackground,
   TextInput,
+  TouchableOpacity,
   TouchableHighlight,
 } from "react-native";
-//import { DragDropContext, Droppable } from "react-beautiful-dnd";
-
-import { v4 as uuidv4 } from "uuid";
-
-const ListContainer = ({ user }) => {
-  const [newListItem, setnewListItem] = useState("");
-  const [newListItemType, setnewListItemType] = useState({
-    value: "once",
-    label: "Once",
-  });
-  const [listItems, setListItems] = useState([]);
-
-  useEffect(() => {
-    async function loadToDos() {
-      //Load my to dos from the database.
-      const collectionSnapshot = await firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .collection("toDos")
-        .get();
-      const loadedToDos = [];
-      collectionSnapshot.forEach((documentSnapshot) => {
-        loadedToDos.push({
-          ...documentSnapshot.data(),
-          id: documentSnapshot.id,
-        });
-      });
-      setListItems(loadedToDos);
-    }
-    loadToDos();
-  }, []);
-
-  const addListItem = () => {
-    if (newListItem) {
-      const newToDo = {
-        name: newListItem,
-        done: false,
-        doneDate: null,
-        type: newListItemType.value,
-        id: uuidv4(),
-      };
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .collection("toDos")
-        .add(newToDo);
-      setListItems([...listItems, newToDo]);
-      setnewListItem("");
-    }
-  };
-
+const List = ({ listItems, setListItems, title, user }) => {
   return (
-    <View className="container toDo">
-      <View className="list">
-        <View className="addListItem">
-          <TextInput
-            onChangeText={(text) => setnewListItem(text)}
-            value={newListItem}
-            placeholder="Something to do..."
-          />
-          <View style={{ width: 200 }}>
-            <RNPickerSelect
-              onValueChange={(value) => setnewListItemType(value)}
-              items={[
-                { value: "once", label: "Once" },
-                { value: "daily", label: "Daily" },
-                { value: "weekly", label: "Weekly" },
-                { value: "monthly", label: "Monthly" },
-              ]}
-            />
+    <View style={{ margin: 10 }}>
+      <Text
+        style={{
+          color: "#fafafa",
+          fontWeight: "400",
+          fontSize: 18,
+          fontFamily: "Lato-Regular",
+          textTransform: "uppercase",
+          opacity: 0.7,
+          letterSpacing: 1.5,
+        }}
+      >
+        {title}
+      </Text>
+      {listItems.map((listItem, i) => {
+        if (listItem.type !== title) {
+          return null;
+        }
+        let displayChecked = true;
+        if (!listItem.doneDate) {
+          displayChecked = false;
+        } else if (
+          //code checking if date is not the same
+          (new Date(listItem.doneDate).getDate() !==
+            new Date(Date.now()).getDate() ||
+            new Date(listItem.doneDate).getMonth() !==
+              new Date(Date.now()).getMonth() ||
+            new Date(listItem.doneDate).getFullYear() !==
+              new Date(Date.now()).getFullYear()) &&
+          listItem.type === "daily"
+        ) {
+          displayChecked = false;
+        } else if (
+          listItem.type === "weekly" &&
+          /*code checking if date is within week*/
+          (new Date(listItem.doneDate).getDate() >
+            new Date(Date.now()).getDate() + 7 ||
+            //ERROR? Should it be 6?
+            new Date(listItem.doneDate).getMonth() !==
+              new Date(Date.now()).getMonth() ||
+            new Date(listItem.doneDate).getFullYear() !==
+              new Date(Date.now()).getFullYear())
+        ) {
+          displayChecked = false;
+        } else if (
+          /*code checking if date is within month*/
+          (new Date(listItem.doneDate).getMonth() !==
+            new Date(Date.now()).getMonth() ||
+            new Date(listItem.doneDate).getFullYear() !==
+              new Date(Date.now()).getFullYear()) &&
+          listItem.type === "monthly"
+        ) {
+          displayChecked = false;
+        }
+        return (
+          <View
+            key={listItem.id}
+            style={{
+              marginVertical: 10,
+              marginHorizontal: 20,
+              backgroundColor: "#fafafa",
+              paddingVertical: 20,
+              paddingHorizontal: 2,
+              borderRadius: 4,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                style={{ marginRight: 10 }}
+                onPress={() => {
+                  const newArray = [...listItems];
+                  displayChecked = !displayChecked;
+                  if (displayChecked) {
+                    listItem.doneDate = Date.now();
+                  } else {
+                    listItem.doneDate = null;
+                  }
+                  setListItems(newArray);
+
+                  firebase
+                    .firestore()
+                    .collection("users")
+                    .doc(user.uid)
+                    .collection("toDos")
+                    .doc(listItem.id)
+                    .set({ doneDate: listItem.doneDate }, { merge: true });
+                }}
+              >
+                <Image
+                  style={
+                    displayChecked
+                      ? {
+                          opacity: 0.5,
+                          height: 25,
+                          width: 25,
+                          marginLeft: 10,
+                        }
+                      : {
+                          opacity: 1,
+                          height: 25,
+                          width: 25,
+                          marginLeft: 10,
+                        }
+                  }
+                  source={
+                    displayChecked
+                      ? require("../assets/check-done.png")
+                      : require("../assets/check-not-done.png")
+                  }
+                  alt="check box"
+                />
+              </TouchableOpacity>
+              <Text
+                style={
+                  displayChecked
+                    ? {
+                        opacity: 0.5,
+                        color: "#303569",
+                        fontWeight: "400",
+                        fontSize: 18,
+                        fontFamily: "Lato-Regular",
+                      }
+                    : {
+                        opacity: 1,
+                        color: "#303569",
+                        fontWeight: "400",
+                        fontSize: 18,
+                        fontFamily: "Lato-Regular",
+                      }
+                }
+              >
+                {listItem.name}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={{ position: "absolute", top: 5, right: 5 }}
+              accessible={true}
+              accessibilityLabel="delete button"
+              accessibilityHint="deletes this to do item."
+              onPress={() => {
+                const firstListItems = [...listItems];
+                firstListItems.splice(i, 1);
+                setListItems(firstListItems);
+
+                firebase
+                  .firestore()
+                  .collection("users")
+                  .doc(user.uid)
+                  .collection("toDos")
+                  .doc(listItem.id)
+                  .delete();
+              }}
+            >
+              <Image
+                source={require("../assets/x-square.png")}
+                style={styles.imageButton}
+              />
+            </TouchableOpacity>
           </View>
-          <TouchableHighlight
-            onPress={() => {
-              addListItem();
-            }}
-          >
-            <Image source={require("../assets/plus-square.png")} />
-          </TouchableHighlight>
-        </View>
-        {/*
-        <View>
-          <DragDropContext
-            onDragEnd={(result) => {
-              const { destination, source } = result;
-              if (!destination) {
-                return;
-              }
-              const newListItems = [...listItems];
-              const removedArray = newListItems.splice(source.index, 1);
-              let item = removedArray[0];
-              item.type = destination.droppableId;
-              newListItems.splice(destination.index, 0, item);
-              setListItems(newListItems);
-            }}
-          >
-            <List
-              listItems={listItems}
-              setListItems={setListItems}
-              title="once"
-              user={user}
-            />
-            <List
-              listItems={listItems}
-              setListItems={setListItems}
-              title="daily"
-              user={user}
-            />
-            <List
-              listItems={listItems}
-              setListItems={setListItems}
-              title="weekly"
-              user={user}
-            />
-            <List
-              listItems={listItems}
-              setListItems={setListItems}
-              title="monthly"
-              user={user}
-            />
-          </DragDropContext>
-        </View>
-        */}
-      </View>
+        );
+      })}
     </View>
   );
 };
-
-export default ListContainer;
+const styles = StyleSheet.create({
+  inputContainer: {
+    margin: 30,
+    alignItems: "flex-start",
+    position: "relative",
+    backgroundColor: "#fafafa",
+    padding: 10,
+    borderRadius: 4,
+    justifyContent: "center",
+    flexWrap: "wrap",
+  },
+  input: {
+    fontSize: 16,
+    width: "90%",
+    padding: 10,
+    marginVertical: 5,
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 4,
+  },
+  imageButton: {
+    height: 25,
+    width: 25,
+    marginLeft: 10,
+    opacity: 0.2,
+  },
+});
+export default List;

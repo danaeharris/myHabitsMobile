@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useFonts } from "@use-expo/font";
 import {
-  StyleSheet,
   Text,
   View,
   ScrollView,
@@ -54,20 +53,19 @@ export default function App() {
   return (
     <>
       <Header user={user} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        contentContainerStyle={{ flex: 1 }}
-        style={styles.container}
+      <ImageBackground
+        source={require("./assets/confetti.png")}
+        style={{ flex: 1, backgroundColor: "#4F5ACE" }}
       >
-        <ImageBackground
-          source={require("./assets/confetti.png")}
-          style={{ ...styles.backgroundImage, flex: 1 }}
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentInsetAdjustmentBehavior="automatic"
+          contentContainerStyle={{}}
         >
           <SafeAreaView>
             <View>
               {user ? (
                 <>
-                  <Text>Hello, {user.uid}</Text>
                   <ListContainer user={user} />
                 </>
               ) : (
@@ -75,16 +73,8 @@ export default function App() {
               )}
             </View>
           </SafeAreaView>
-        </ImageBackground>
-      </ScrollView>
+        </ScrollView>
+      </ImageBackground>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#4F5ACE",
-  },
-
-  backgroundImage: {},
-});

@@ -4,35 +4,29 @@ import firebase from "firebase";
 import RNPickerSelect from "react-native-picker-select";
 import {
   StyleSheet,
-  Text,
   View,
-  ScrollView,
-  SafeAreaView,
   Image,
-  ImageBackground,
   TextInput,
-  TouchableHighlight,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
-//import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { Chevron } from "react-native-shapes";
+import List from "./list";
 
 import { v4 as uuidv4 } from "uuid";
 
 const ListContainer = ({ user }) => {
   const [newListItem, setnewListItem] = useState("");
-  const [newListItemType, setnewListItemType] = useState({
-    value: "once",
-    label: "Once",
-  });
+  const [newListItemType, setnewListItemType] = useState("once");
   const [listItems, setListItems] = useState([]);
 
   useEffect(() => {
-    async function loadToDos() {
+    async function loadToDos(userId) {
       //Load my to dos from the database.
       const collectionSnapshot = await firebase
         .firestore()
         .collection("users")
-        .doc(user.uid)
+        .doc(userId)
         .collection("toDos")
         .get();
       const loadedToDos = [];
@@ -44,8 +38,10 @@ const ListContainer = ({ user }) => {
       });
       setListItems(loadedToDos);
     }
-    loadToDos();
-  }, []);
+    if (user && user.uid) {
+      loadToDos(user.uid);
+    }
+  }, [user]);
 
   const addListItem = () => {
     if (newListItem) {
@@ -53,8 +49,9 @@ const ListContainer = ({ user }) => {
         name: newListItem,
         done: false,
         doneDate: null,
-        type: newListItemType.value,
+        type: newListItemType,
         id: uuidv4(),
+        dateEdited: Date.now(),
       };
       firebase
         .firestore()
@@ -81,37 +78,54 @@ const ListContainer = ({ user }) => {
             onChangeText={(text) => setnewListItem(text)}
             value={newListItem}
             placeholder="Something to do..."
+            maxLength={34}
           />
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <RNPickerSelect
-              style={{
-                ...pickerSelectStyles,
-              }}
-              placeholder={placeholder}
-              onValueChange={(value) => setnewListItemType(value)}
-              items={[
-                { value: "once", label: "Once" },
-                { value: "daily", label: "Daily" },
-                { value: "weekly", label: "Weekly" },
-                { value: "monthly", label: "Monthly" },
-              ]}
-            />
+            <View style={{ flex: 1 }}>
+              <RNPickerSelect
+                style={{
+                  ...pickerSelectStyles,
+                }}
+                value={newListItemType}
+                placeholder={placeholder}
+                onValueChange={(value) => setnewListItemType(value)}
+                items={[
+                  { value: "once", label: "Once" },
+                  { value: "daily", label: "Daily" },
+                  { value: "weekly", label: "Weekly" },
+                  { value: "monthly", label: "Monthly" },
+                ]}
+                useNativeAndroidPickerStyle={false}
+                Icon={() => {
+                  return <Chevron size={2} color="#ddd" />;
+                }}
+              />
+            </View>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="add button"
+              accessibilityHint="adds this to do item to your list."
               activeOpacity={1}
-              style={{ opacity: 0.5, marginLeft: 10 }}
+              style={{ opacity: 0.75, marginLeft: 10, width: 53 }}
               onPress={() => {
+                Keyboard.dismiss();
                 addListItem();
               }}
             >
               <Image
                 source={require("../assets/plus-square.png")}
-                style={styles.imageButton}
+                style={{
+                  height: 43,
+                  width: 43,
+                  marginLeft: 10,
+                  padding: 5,
+                }}
               />
             </TouchableOpacity>
           </View>
         </View>
         <View>
-          {/*<List
+          <List
             listItems={listItems}
             setListItems={setListItems}
             title="once"
@@ -134,7 +148,7 @@ const ListContainer = ({ user }) => {
             setListItems={setListItems}
             title="monthly"
             user={user}
-          />*/}
+          />
         </View>
       </View>
     </View>
@@ -142,9 +156,6 @@ const ListContainer = ({ user }) => {
 };
 
 const styles = StyleSheet.create({
-  toDoContainer: {
-    backgroundColor: "#4F5ACE",
-  },
   inputContainer: {
     margin: 30,
     alignItems: "flex-start",
@@ -156,41 +167,40 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   input: {
+    color: "#303569",
+    fontFamily: "Lato-Regular",
     fontSize: 16,
-    width: "90%",
+    width: "100%",
     padding: 10,
-    marginVertical: 5,
+    marginBottom: 5,
     borderColor: "#ddd",
     borderWidth: 1,
     borderRadius: 4,
-  },
-  imageButton: {
-    height: 35,
-    width: 35,
-    marginLeft: 10,
-    padding: 5,
   },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
+    fontFamily: "Lato-Regular",
     fontSize: 16,
+    color: "#303569",
     padding: 10,
-    marginVertical: 5,
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 4,
-    color: "black",
-    width: 250,
   },
   inputAndroid: {
+    fontFamily: "Lato-Regular",
     fontSize: 16,
+    color: "#303569",
     padding: 10,
-    marginVertical: 5,
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 4,
-    color: "black",
-    width: 250,
+    backgroundColor: "transparent",
+  },
+  iconContainer: {
+    top: 15,
+    right: 15,
   },
 });
 export default ListContainer;
