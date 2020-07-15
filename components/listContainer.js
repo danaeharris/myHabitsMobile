@@ -12,6 +12,7 @@ import {
   ImageBackground,
   TextInput,
   TouchableHighlight,
+  TouchableOpacity,
 } from "react-native";
 //import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -65,18 +66,28 @@ const ListContainer = ({ user }) => {
       setnewListItem("");
     }
   };
+  const placeholder = {
+    label: "How often?",
+    value: null,
+    color: "#DDD",
+  };
 
   return (
-    <View className="container toDo">
-      <View className="list">
-        <View className="addListItem">
+    <View style={styles.toDoContainer}>
+      <View>
+        <View style={styles.inputContainer}>
           <TextInput
+            style={styles.input}
             onChangeText={(text) => setnewListItem(text)}
             value={newListItem}
             placeholder="Something to do..."
           />
-          <View style={{ width: 200 }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <RNPickerSelect
+              style={{
+                ...pickerSelectStyles,
+              }}
+              placeholder={placeholder}
               onValueChange={(value) => setnewListItemType(value)}
               items={[
                 { value: "once", label: "Once" },
@@ -85,61 +96,101 @@ const ListContainer = ({ user }) => {
                 { value: "monthly", label: "Monthly" },
               ]}
             />
+            <TouchableOpacity
+              activeOpacity={1}
+              style={{ opacity: 0.5, marginLeft: 10 }}
+              onPress={() => {
+                addListItem();
+              }}
+            >
+              <Image
+                source={require("../assets/plus-square.png")}
+                style={styles.imageButton}
+              />
+            </TouchableOpacity>
           </View>
-          <TouchableHighlight
-            onPress={() => {
-              addListItem();
-            }}
-          >
-            <Image source={require("../assets/plus-square.png")} />
-          </TouchableHighlight>
         </View>
-        {/*
         <View>
-          <DragDropContext
-            onDragEnd={(result) => {
-              const { destination, source } = result;
-              if (!destination) {
-                return;
-              }
-              const newListItems = [...listItems];
-              const removedArray = newListItems.splice(source.index, 1);
-              let item = removedArray[0];
-              item.type = destination.droppableId;
-              newListItems.splice(destination.index, 0, item);
-              setListItems(newListItems);
-            }}
-          >
-            <List
-              listItems={listItems}
-              setListItems={setListItems}
-              title="once"
-              user={user}
-            />
-            <List
-              listItems={listItems}
-              setListItems={setListItems}
-              title="daily"
-              user={user}
-            />
-            <List
-              listItems={listItems}
-              setListItems={setListItems}
-              title="weekly"
-              user={user}
-            />
-            <List
-              listItems={listItems}
-              setListItems={setListItems}
-              title="monthly"
-              user={user}
-            />
-          </DragDropContext>
+          {/*<List
+            listItems={listItems}
+            setListItems={setListItems}
+            title="once"
+            user={user}
+          />
+          <List
+            listItems={listItems}
+            setListItems={setListItems}
+            title="daily"
+            user={user}
+          />
+          <List
+            listItems={listItems}
+            setListItems={setListItems}
+            title="weekly"
+            user={user}
+          />
+          <List
+            listItems={listItems}
+            setListItems={setListItems}
+            title="monthly"
+            user={user}
+          />*/}
         </View>
-        */}
       </View>
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  toDoContainer: {
+    backgroundColor: "#4F5ACE",
+  },
+  inputContainer: {
+    margin: 20,
+    alignItems: "flex-start",
+    position: "relative",
+    backgroundColor: "#fafafa",
+    padding: 10,
+    borderRadius: 4,
+    justifyContent: "center",
+    flexWrap: "wrap",
+  },
+  input: {
+    fontSize: 16,
+    width: "90%",
+    padding: 10,
+    marginVertical: 5,
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 4,
+  },
+  imageButton: {
+    height: 35,
+    width: 35,
+    marginLeft: 10,
+    padding: 5,
+  },
+});
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    padding: 10,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 4,
+    color: "black",
+    width: 250,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    padding: 10,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 4,
+    color: "black",
+    width: 250,
+  },
+});
 export default ListContainer;
