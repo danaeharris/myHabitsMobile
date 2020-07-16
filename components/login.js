@@ -8,21 +8,17 @@ import {
   TouchableHighlight,
   StyleSheet,
 } from "react-native";
+import { v4 as uuidv4 } from "uuid";
 
-const LogIn = ({ user, setUser }) => {
+const LogIn = ({ user, signingUp, setSigningUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const [signingUp, setSigningUp] = useState(false);
 
   const attemptLogIn = () => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      //.then(() => {
-      //Router.push("/");
-      // })
       .catch(function (error) {
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -60,11 +56,14 @@ const LogIn = ({ user, setUser }) => {
             accessibilityLabel="Create an account"
             accessibilityHint="Submits your email and password to create an account."
             style={styles.button}
-            onPress={() => {
-              firebase
+            onPress={async () => {
+              await firebase
                 .auth()
                 .createUserWithEmailAndPassword(email, password)
+                .then(setNewUserToDos)
+
                 .catch(function (error) {
+                  console.log("There was an error", error);
                   // Handle Errors here.
                   const errorCode = error.code;
                   const errorMessage = error.message;
@@ -82,6 +81,7 @@ const LogIn = ({ user, setUser }) => {
             accessibilityHint="Navigates you to the log in form."
             style={{ alignSelf: "center" }}
             onPress={() => {
+              setError(null);
               setSigningUp(false);
             }}
           >
@@ -130,6 +130,7 @@ const LogIn = ({ user, setUser }) => {
             accessibilityHint="Navigates you to the sign up form."
             style={{ alignSelf: "center" }}
             onPress={() => {
+              setError(null);
               setSigningUp(true);
             }}
           >

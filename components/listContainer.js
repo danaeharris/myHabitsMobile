@@ -15,33 +15,9 @@ import List from "./list";
 
 import { v4 as uuidv4 } from "uuid";
 
-const ListContainer = ({ user }) => {
+const ListContainer = ({ user, listItems, setListItems }) => {
   const [newListItem, setnewListItem] = useState("");
   const [newListItemType, setnewListItemType] = useState("once");
-  const [listItems, setListItems] = useState([]);
-
-  useEffect(() => {
-    async function loadToDos(userId) {
-      //Load my to dos from the database.
-      const collectionSnapshot = await firebase
-        .firestore()
-        .collection("users")
-        .doc(userId)
-        .collection("toDos")
-        .get();
-      const loadedToDos = [];
-      collectionSnapshot.forEach((documentSnapshot) => {
-        loadedToDos.push({
-          ...documentSnapshot.data(),
-          id: documentSnapshot.id,
-        });
-      });
-      setListItems(loadedToDos);
-    }
-    if (user && user.uid) {
-      loadToDos(user.uid);
-    }
-  }, [user]);
 
   const addListItem = () => {
     if (newListItem) {
@@ -78,7 +54,7 @@ const ListContainer = ({ user }) => {
             onChangeText={(text) => setnewListItem(text)}
             value={newListItem}
             placeholder="Something to do..."
-            maxLength={34}
+            maxLength={500}
           />
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View style={{ flex: 1 }}>

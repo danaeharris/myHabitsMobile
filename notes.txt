@@ -1,7 +1,7 @@
 ipad{
-    fix header height on ipad
-    change to do length to like 500 characters.
-    wrap to do onto next line instead of overflowing card
+    //fix header height on ipad
+    //change to do length to like 500 characters.
+    //wrap to do onto next line instead of overflowing card
     make sample starter data
     add padding to bottom of scrollview.
     fix log in page to be centered.

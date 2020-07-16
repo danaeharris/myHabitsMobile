@@ -11,9 +11,9 @@ const Header = ({ user }) => {
         backgroundColor: "#fafafa",
         alignItems: "flex-end",
         justifyContent: "space-between",
-        paddingTop: 60,
-        paddingBottom: 10,
-        paddingHorizontal: 30,
+        paddingTop: "10%",
+        paddingBottom: "5%",
+        paddingHorizontal: "5%",
         shadowColor: "#303569",
         shadowOffset: {
           width: 0,

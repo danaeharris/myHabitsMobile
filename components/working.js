@@ -1,207 +1,110 @@
-import firebase from "firebase";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useFonts } from "@use-expo/font";
 import {
-  StyleSheet,
   Text,
   View,
+  ScrollView,
+  SafeAreaView,
   Image,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
+  ImageBackground,
 } from "react-native";
-const List = ({ listItems, setListItems, title, user }) => {
-  return (
-    <View style={{ margin: 10 }}>
-      <Text
-        style={{
-          color: "#fafafa",
-          fontWeight: "400",
-          fontSize: 18,
-          fontFamily: "Lato-Regular",
-          textTransform: "uppercase",
-          opacity: 0.7,
-          letterSpacing: 1.5,
-        }}
-      >
-        {title}
-      </Text>
-      {listItems.map((listItem, i) => {
-        if (listItem.type !== title) {
-          return null;
-        }
-        let displayChecked = true;
-        if (!listItem.doneDate) {
-          displayChecked = false;
-        } else if (
-          //code checking if date is not the same
-          (new Date(listItem.doneDate).getDate() !==
-            new Date(Date.now()).getDate() ||
-            new Date(listItem.doneDate).getMonth() !==
-              new Date(Date.now()).getMonth() ||
-            new Date(listItem.doneDate).getFullYear() !==
-              new Date(Date.now()).getFullYear()) &&
-          listItem.type === "daily"
-        ) {
-          displayChecked = false;
-        } else if (
-          listItem.type === "weekly" &&
-          /*code checking if date is within week*/
-          (new Date(listItem.doneDate).getDate() >
-            new Date(Date.now()).getDate() + 7 ||
-            //ERROR? Should it be 6?
-            new Date(listItem.doneDate).getMonth() !==
-              new Date(Date.now()).getMonth() ||
-            new Date(listItem.doneDate).getFullYear() !==
-              new Date(Date.now()).getFullYear())
-        ) {
-          displayChecked = false;
-        } else if (
-          /*code checking if date is within month*/
-          (new Date(listItem.doneDate).getMonth() !==
-            new Date(Date.now()).getMonth() ||
-            new Date(listItem.doneDate).getFullYear() !==
-              new Date(Date.now()).getFullYear()) &&
-          listItem.type === "monthly"
-        ) {
-          displayChecked = false;
-        }
-        return (
-          <View
-            key={listItem.id}
-            style={{
-              marginVertical: 10,
-              marginHorizontal: 20,
-              backgroundColor: "#fafafa",
-              paddingVertical: 20,
-              paddingHorizontal: 2,
-              borderRadius: 4,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                style={{ marginRight: 10 }}
-                onPress={() => {
-                  const newArray = [...listItems];
-                  displayChecked = !displayChecked;
-                  if (displayChecked) {
-                    listItem.doneDate = Date.now();
-                  } else {
-                    listItem.doneDate = null;
-                  }
-                  setListItems(newArray);
 
-                  firebase
-                    .firestore()
-                    .collection("users")
-                    .doc(user.uid)
-                    .collection("toDos")
-                    .doc(listItem.id)
-                    .set({ doneDate: listItem.doneDate }, { merge: true });
-                }}
-              >
-                <Image
-                  style={
-                    displayChecked
-                      ? {
-                          opacity: 0.5,
-                          height: 25,
-                          width: 25,
-                          marginLeft: 10,
-                        }
-                      : {
-                          opacity: 1,
-                          height: 25,
-                          width: 25,
-                          marginLeft: 10,
-                        }
-                  }
-                  source={
-                    displayChecked
-                      ? require("../assets/check-done.png")
-                      : require("../assets/check-not-done.png")
-                  }
-                  alt="check box"
-                />
-              </TouchableOpacity>
-              <Text
-                style={
-                  displayChecked
-                    ? {
-                        opacity: 0.5,
-                        color: "#303569",
-                        fontWeight: "400",
-                        fontSize: 18,
-                        fontFamily: "Lato-Regular",
-                      }
-                    : {
-                        opacity: 1,
-                        color: "#303569",
-                        fontWeight: "400",
-                        fontSize: 18,
-                        fontFamily: "Lato-Regular",
-                      }
-                }
-              >
-                {listItem.name}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={{ position: "absolute", top: 5, right: 5 }}
-              accessible={true}
-              accessibilityLabel="delete button"
-              accessibilityHint="deletes this to do item."
-              onPress={() => {
-                const firstListItems = [...listItems];
-                firstListItems.splice(i, 1);
-                setListItems(firstListItems);
+import { AppLoading } from "expo";
+import firebase from "firebase";
+import Header from "./components/header";
+import LogIn from "./components/login";
+import ListContainer from "./components/listContainer";
+import { v4 as uuidv4 } from "uuid";
 
-                firebase
-                  .firestore()
-                  .collection("users")
-                  .doc(user.uid)
-                  .collection("toDos")
-                  .doc(listItem.id)
-                  .delete();
-              }}
-            >
-              <Image
-                source={require("../assets/x-square.png")}
-                style={styles.imageButton}
-              />
-            </TouchableOpacity>
-          </View>
-        );
-      })}
-    </View>
-  );
+var firebaseConfig = {
+  apiKey: "AIzaSyB94YmeDMN-o3JM8GW2BzfTeSRP9E2SMCs",
+  authDomain: "to-do-list-d0060.firebaseapp.com",
+  databaseURL: "https://to-do-list-d0060.firebaseio.com",
+  projectId: "to-do-list-d0060",
+  storageBucket: "to-do-list-d0060.appspot.com",
+  messagingSenderId: "385324177482",
+  appId: "1:385324177482:web:ba21154e1ebb3d8bd0eeb3",
+  measurementId: "G-FHXX892BY5",
 };
-const styles = StyleSheet.create({
-  inputContainer: {
-    margin: 30,
-    alignItems: "flex-start",
-    position: "relative",
-    backgroundColor: "#fafafa",
-    padding: 10,
-    borderRadius: 4,
-    justifyContent: "center",
-    flexWrap: "wrap",
-  },
-  input: {
-    fontSize: 16,
-    width: "90%",
-    padding: 10,
-    marginVertical: 5,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 4,
-  },
-  imageButton: {
-    height: 25,
-    width: 25,
-    marginLeft: 10,
-    opacity: 0.2,
-  },
-});
-export default List;
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const auth = firebase.auth();
+
+export default function App() {
+  const [user, setUser] = useState(true);
+  const [signingUp, setSigningUp] = useState(false);
+
+  const [listItems, setListItems] = useState([
+    {
+      name: "This isn't part of my routine, so I need a reminder!",
+      done: false,
+      doneDate: null,
+      type: "once",
+      id: uuidv4(),
+      dateEdited: Date.now(),
+    },
+    {
+      name: "I do this every day!",
+      done: false,
+      doneDate: null,
+      type: "daily",
+      id: uuidv4(),
+      dateEdited: Date.now(),
+    },
+    {
+      name: "This just needs to be done when I have time this week.",
+      done: false,
+      doneDate: null,
+      type: "weekly",
+      id: uuidv4(),
+      dateEdited: Date.now(),
+    },
+    {
+      name: "This is so easy to forget, since I only do it once a month.",
+      done: false,
+      doneDate: null,
+      type: "monthly",
+      id: uuidv4(),
+      dateEdited: Date.now(),
+    },
+  ]);
+
+  const setNewUserToDos = (userCredential) => {
+    //setInitial toDos for a new user.
+    const initialListItems = [...listItems];
+    const { user } = userCredential;
+    return Promise.all(
+      initialListItems.map((initialListItem) => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .collection("toDos")
+          .doc(initialListItem.id)
+          .set({ ...initialListItem })
+      
+          }    )
+    ).catch((e) => console.log("error", e));
+  };
+  async function loadToDos(userId) {
+    //Load my to dos from the database.
+    const collectionSnapshot = await firebase
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .collection("toDos")
+      .get();
+    const loadedToDos = [];
+    collectionSnapshot.forEach((documentSnapshot) => {
+      loadedToDos.push({
+        ...documentSnapshot.data(),
+        id: documentSnapshot.id,
+      });
+    });
+    setListItems(loadedToDos);
+    if (user && user.uid) {
+      loadToDos(user.uid);
+    }
+  }

@@ -1,6 +1,7 @@
 import firebase from "firebase";
 import React, { useState, useEffect } from "react";
 import { Text, View, Image, TouchableOpacity } from "react-native";
+
 const List = ({ listItems, setListItems, title, user }) => {
   const [hidden, setHidden] = useState(false);
   return (
@@ -157,6 +158,8 @@ const List = ({ listItems, setListItems, title, user }) => {
                               fontWeight: "400",
                               fontSize: 18,
                               fontFamily: "Lato-Regular",
+                              flexWrap: "wrap",
+                              marginRight: 55,
                             }
                           : {
                               opacity: 1,
@@ -164,6 +167,8 @@ const List = ({ listItems, setListItems, title, user }) => {
                               fontWeight: "400",
                               fontSize: 18,
                               fontFamily: "Lato-Regular",
+                              flexWrap: "wrap",
+                              marginRight: 55,
                             }
                       }
                     >
