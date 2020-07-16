@@ -60,8 +60,6 @@ const LogIn = ({ user, signingUp, setSigningUp }) => {
               await firebase
                 .auth()
                 .createUserWithEmailAndPassword(email, password)
-                .then(setNewUserToDos)
-
                 .catch(function (error) {
                   console.log("There was an error", error);
                   // Handle Errors here.
@@ -69,6 +67,7 @@ const LogIn = ({ user, signingUp, setSigningUp }) => {
                   const errorMessage = error.message;
                   setError(errorMessage);
                 });
+              //Could I set user here instead????
             }}
             underlayColor="#3C44A3"
           >

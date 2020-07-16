@@ -108,3 +108,9 @@ export default function App() {
       loadToDos(user.uid);
     }
   }
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      setUser(user);
+      signingUp ? setNewUserToDos() : loadToDos();
+    });
+  },[]);

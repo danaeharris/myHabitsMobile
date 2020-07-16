@@ -71,7 +71,7 @@ export default function App() {
     },
   ]);
 
-  const setNewUserToDos = (userCredential) => {
+  const setNewUserToDos = (userId) => {
     //setInitial toDos for a new user.
     const initialListItems = [...listItems];
     const { user } = userCredential;
@@ -80,7 +80,7 @@ export default function App() {
         firebase
           .firestore()
           .collection("users")
-          .doc(user.uid)
+          .doc(userId)
           .collection("toDos")
           .doc(initialListItem.id)
           .set({ ...initialListItem });
@@ -115,6 +115,7 @@ export default function App() {
       }
     });
   }, [user]);
+
   let [fontsLoaded] = useFonts({
     "Lato-Light": require("./assets/fonts/Lato-Light.ttf"),
     "Lato-Regular": require("./assets/fonts/Lato-Regular.ttf"),
