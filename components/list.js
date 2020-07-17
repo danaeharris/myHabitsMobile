@@ -6,40 +6,42 @@ const List = ({ listItems, setListItems, title, user }) => {
   const [hidden, setHidden] = useState(false);
   return (
     <View style={{ marginHorizontal: 10 }}>
-      <TouchableOpacity
-        accessible={true}
-        accessibilityLabel="expand list"
-        accessibilityHint={`shows ${title} list.`}
-        onPress={() => {
-          setHidden(!hidden);
-        }}
-        style={{ paddingTop: 20 }}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text
-            style={{
-              color: "#fafafa",
-              fontWeight: "400",
-              fontSize: 18,
-              fontFamily: "Lato-Regular",
-              textTransform: "uppercase",
-              margin: 20,
-              opacity: 0.7,
-              letterSpacing: 1.5,
-            }}
-          >
-            {title}
-          </Text>
-          <Image
-            source={
-              hidden
-                ? require("../assets/chevron-side.png")
-                : require("../assets/chevron-down.png")
-            }
-            style={{ height: 35, width: 35, opacity: 0.7 }}
-          />
-        </View>
-      </TouchableOpacity>
+      {listItems.filter((listItem) => listItem.type === title).length > 0 ? (
+        <TouchableOpacity
+          accessible={true}
+          accessibilityLabel="expand list"
+          accessibilityHint={`shows ${title} list.`}
+          onPress={() => {
+            setHidden(!hidden);
+          }}
+          style={{ paddingTop: 20 }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text
+              style={{
+                color: "#fafafa",
+                fontWeight: "400",
+                fontSize: 18,
+                fontFamily: "Lato-Regular",
+                textTransform: "uppercase",
+                margin: 20,
+                opacity: 0.7,
+                letterSpacing: 1.5,
+              }}
+            >
+              {title}
+            </Text>
+            <Image
+              source={
+                hidden
+                  ? require("../assets/chevron-side.png")
+                  : require("../assets/chevron-down.png")
+              }
+              style={{ height: 35, width: 35, opacity: 0.7 }}
+            />
+          </View>
+        </TouchableOpacity>
+      ) : null}
       {listItems
         .sort((a, b) => {
           return b.dateEdited - a.dateEdited;
@@ -167,7 +169,7 @@ const List = ({ listItems, setListItems, title, user }) => {
                               fontSize: 18,
                               fontFamily: "Lato-Regular",
                               flexWrap: "wrap",
-                              marginRight: 60,
+                              marginRight: 55,
                             }
                       }
                     >
