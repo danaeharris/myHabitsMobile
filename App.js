@@ -32,49 +32,58 @@ if (!firebase.apps.length) {
 }
 const auth = firebase.auth();
 
+let globalSigningUp = false;
+
 export default function App() {
   const [user, setUser] = useState(true);
-  const [signingUp, setSigningUp] = useState(false);
+  const [signingUp, _setSigningUp] = useState(false);
 
-  const [listItems, setListItems] = useState([
-    {
-      name: "This isn't part of my routine, so I need a reminder!",
-      done: false,
-      doneDate: null,
-      type: "once",
-      id: uuidv4(),
-      dateEdited: Date.now(),
-    },
-    {
-      name: "I do this every day!",
-      done: false,
-      doneDate: null,
-      type: "daily",
-      id: uuidv4(),
-      dateEdited: Date.now(),
-    },
-    {
-      name: "This just needs to be done when I have time this week.",
-      done: false,
-      doneDate: null,
-      type: "weekly",
-      id: uuidv4(),
-      dateEdited: Date.now(),
-    },
-    {
-      name: "This is so easy to forget, since I only do it once a month.",
-      done: false,
-      doneDate: null,
-      type: "monthly",
-      id: uuidv4(),
-      dateEdited: Date.now(),
-    },
-  ]);
+  const setSigningUp = (newValue) => {
+    globalSigningUp = newValue;
+    _setSigningUp(newValue);
+  };
+
+  const [listItems, setListItems] = useState([]);
 
   const setNewUserToDos = (userId) => {
+    console.log("Calling setNewUserToDos.");
     //setInitial toDos for a new user.
-    const initialListItems = [...listItems];
-    const { user } = userCredential;
+    const initialListItems = [
+      {
+        name: "This isn't part of my routine, so I need a reminder!",
+        done: false,
+        doneDate: null,
+        type: "once",
+        id: uuidv4(),
+        dateEdited: Date.now(),
+      },
+      {
+        name: "I do this every day!",
+        done: false,
+        doneDate: null,
+        type: "daily",
+        id: uuidv4(),
+        dateEdited: Date.now(),
+      },
+      {
+        name: "This just needs to be done when I have time this week.",
+        done: false,
+        doneDate: null,
+        type: "weekly",
+        id: uuidv4(),
+        dateEdited: Date.now(),
+      },
+      {
+        name: "This is so easy to forget, since I only do it once a month.",
+        done: false,
+        doneDate: null,
+        type: "monthly",
+        id: uuidv4(),
+        dateEdited: Date.now(),
+      },
+    ];
+
+    setListItems(initialListItems);
     return Promise.all(
       initialListItems.map((initialListItem) => {
         firebase
@@ -102,19 +111,24 @@ export default function App() {
         id: documentSnapshot.id,
       });
     });
+    console.log("loadedToDos: ", loadedToDos);
     setListItems(loadedToDos);
-    if (user && user.uid) {
-      loadToDos(user.uid);
-    }
+    return loadedToDos;
   }
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      setUser(user);
-      if (user && user.uid) {
-        signingUp ? setNewUserToDos() : loadToDos();
+    auth.onAuthStateChanged((newFirebaseUser) => {
+      setUser(newFirebaseUser);
+      if (newFirebaseUser && newFirebaseUser.uid) {
+        if (globalSigningUp) {
+          setNewUserToDos(newFirebaseUser.uid).then(() => {
+            loadToDos(newFirebaseUser.uid);
+          });
+        } else {
+          loadToDos(newFirebaseUser.uid);
+        }
       }
     });
-  }, [user]);
+  }, []);
 
   let [fontsLoaded] = useFonts({
     "Lato-Light": require("./assets/fonts/Lato-Light.ttf"),
