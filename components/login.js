@@ -67,7 +67,6 @@ const LogIn = ({ user, signingUp, setSigningUp }) => {
                   const errorMessage = error.message;
                   setError(errorMessage);
                 });
-              //Could I set user here instead????
             }}
             underlayColor="#3C44A3"
           >
@@ -144,7 +143,8 @@ const LogIn = ({ user, signingUp, setSigningUp }) => {
 const styles = StyleSheet.create({
   logIn: {
     backgroundColor: "#fafafa",
-    margin: 50,
+    marginTop: "30%",
+    alignSelf: "center",
     height: 275,
     width: 275,
     padding: 10,

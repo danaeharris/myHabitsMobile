@@ -67,7 +67,6 @@ const List = ({ listItems, setListItems, title, user }) => {
             // code checking if date is within week
             (new Date(listItem.doneDate).getDate() >
               new Date(Date.now()).getDate() + 7 ||
-              //ERROR? Should it be 6?
               new Date(listItem.doneDate).getMonth() !==
                 new Date(Date.now()).getMonth() ||
               new Date(listItem.doneDate).getFullYear() !==
@@ -168,7 +167,7 @@ const List = ({ listItems, setListItems, title, user }) => {
                               fontSize: 18,
                               fontFamily: "Lato-Regular",
                               flexWrap: "wrap",
-                              marginRight: 55,
+                              marginRight: 60,
                             }
                       }
                     >

@@ -2,9 +2,10 @@ ipad{
     //fix header height on ipad
     //change to do length to like 500 characters.
     //wrap to do onto next line instead of overflowing card
-    make sample starter data
-    add padding to bottom of scrollview.
-    fix log in page to be centered.
-    only display to do title if section has to dos in it.
-    update filtering logic?
+    //make sample starter data
+   // add padding to bottom of scrollview.
+    //fix log in page to be centered.
+ ???????? only display to do title if section has to dos in it.
+ **Currently displaying no titles????
+    //fix character overlapping x bug.
 }

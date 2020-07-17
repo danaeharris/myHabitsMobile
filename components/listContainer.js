@@ -46,7 +46,7 @@ const ListContainer = ({ user, listItems, setListItems }) => {
   };
 
   return (
-    <View style={styles.toDoContainer}>
+    <View style={{ paddingBottom: "25%" }}>
       <View>
         <View style={styles.inputContainer}>
           <TextInput
