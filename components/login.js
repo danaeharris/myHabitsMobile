@@ -5,7 +5,7 @@ import {
   Text,
   View,
   Image,
-  TouchableHighlight,
+  TouchableOpacity,
   StyleSheet,
 } from "react-native";
 import { v4 as uuidv4 } from "uuid";
@@ -51,7 +51,7 @@ const LogIn = ({ user, signingUp, setSigningUp }) => {
               onChangeText={(text) => setPassword(text)}
             ></TextInput>
           </View>
-          <TouchableHighlight
+          <TouchableOpacity
             accessible={true}
             accessibilityLabel="Create an account"
             accessibilityHint="Submits your email and password to create an account."
@@ -71,20 +71,26 @@ const LogIn = ({ user, signingUp, setSigningUp }) => {
             underlayColor="#3C44A3"
           >
             <Text style={styles.buttonText}>Create an Account</Text>
-          </TouchableHighlight>
-          <Text style={{ color: "red" }}>{error ? error : ""}</Text>
-          <TouchableHighlight
+          </TouchableOpacity>
+          {error ? (
+            <Text style={{ color: "red", paddingBottom: 30, paddingTop: 10 }}>
+              {error ? error : ""}
+            </Text>
+          ) : null}
+          <TouchableOpacity
             accessible={true}
             accessibilityLabel="Already have an account"
             accessibilityHint="Navigates you to the log in form."
-            style={{ alignSelf: "center" }}
+            style={{ alignSelf: "center", padding: 10 }}
             onPress={() => {
               setError(null);
               setSigningUp(false);
             }}
           >
-            <Text>Already have an account?</Text>
-          </TouchableHighlight>
+            <Text style={{ textDecorationLine: "underline" }}>
+              Already have an account?
+            </Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <View style={styles.logIn}>
@@ -109,7 +115,7 @@ const LogIn = ({ user, signingUp, setSigningUp }) => {
               onChangeText={(text) => setPassword(text)}
             ></TextInput>
           </View>
-          <TouchableHighlight
+          <TouchableOpacity
             accessible={true}
             accessibilityLabel="log in button"
             accessibilityHint="logs you into the app."
@@ -120,20 +126,26 @@ const LogIn = ({ user, signingUp, setSigningUp }) => {
             underlayColor="#3C44A3"
           >
             <Text style={styles.buttonText}>Log In</Text>
-          </TouchableHighlight>
-          <Text style={{ color: "red" }}>{error ? error : ""}</Text>
-          <TouchableHighlight
+          </TouchableOpacity>
+          {error ? (
+            <Text style={{ color: "red", paddingBottom: 30, paddingTop: 10 }}>
+              {error ? error : ""}
+            </Text>
+          ) : null}
+          <TouchableOpacity
             accessible={true}
             accessibilityLabel="Don't have an account"
             accessibilityHint="Navigates you to the sign up form."
-            style={{ alignSelf: "center" }}
+            style={{ alignSelf: "center", padding: 10 }}
             onPress={() => {
               setError(null);
               setSigningUp(true);
             }}
           >
-            <Text>Don't have an account?</Text>
-          </TouchableHighlight>
+            <Text style={{ textDecorationLine: "underline" }}>
+              Don't have an account?
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
     </>
@@ -145,9 +157,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fafafa",
     marginTop: "30%",
     alignSelf: "center",
-    height: 275,
+    //height: 275,
     width: 275,
-    padding: 10,
+    padding: 20,
     alignItems: "flex-start",
     justifyContent: "center",
     borderRadius: 4,
@@ -161,7 +173,7 @@ const styles = StyleSheet.create({
     borderColor: "#cccccc",
     padding: 9,
     borderRadius: 4,
-    width: 250,
+    width: 235,
   },
   textInput: {
     fontSize: 16,

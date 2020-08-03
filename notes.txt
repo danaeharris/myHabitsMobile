@@ -9,3 +9,22 @@ ipad{
  **Currently displaying no titles????
     //fix character overlapping x bug.
 }
+
+
+
+Two ways to update your app once it's in the app store:
+
+• expo build:ios > builds you an .ipa file (or .apk for Android) that you upload to the App Store and submit for review.
+   • Goes through the full review process, takes a day or two.
+   • Users get this update when they update from the App Store.
+
+• expo publish: Pushes an over-the-air update to installed apps without a new App Store submission.
+    • No app store review.
+    • Users close and re-open their app.
+
+
+
+
+
+
+
