@@ -21,7 +21,8 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.danaeharris.myhabits"
+      "package": "com.danaeharris.myhabits",
+      "versionCode": 2
     }
   }
 }
