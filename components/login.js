@@ -11,6 +11,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 
 const LogIn = ({ user, signingUp, setSigningUp }) => {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -93,61 +94,61 @@ const LogIn = ({ user, signingUp, setSigningUp }) => {
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={styles.logIn}>
-          <View>
-            <Text htmlFor="email">Email</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              autoCompleteType="email"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-            ></TextInput>
-          </View>
-          <View>
-            <Text htmlFor="password">Password</Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry={true}
-              autoCapitalize="none"
-              autoCompleteType="password"
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-            ></TextInput>
-          </View>
-          <TouchableOpacity
-            accessible={true}
-            accessibilityLabel="log in button"
-            accessibilityHint="logs you into the app."
-            style={styles.button}
-            onPress={() => {
-              attemptLogIn();
-            }}
-            underlayColor="#3C44A3"
-          >
-            <Text style={styles.buttonText}>Log In</Text>
-          </TouchableOpacity>
-          {error ? (
-            <Text style={{ color: "red", paddingBottom: 30, paddingTop: 10 }}>
-              {error ? error : ""}
+          <View style={styles.logIn}>
+            <View>
+              <Text htmlFor="email">Email</Text>
+              <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                autoCompleteType="email"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              ></TextInput>
+            </View>
+            <View>
+              <Text htmlFor="password">Password</Text>
+              <TextInput
+                style={styles.input}
+                secureTextEntry={true}
+                autoCapitalize="none"
+                autoCompleteType="password"
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+              ></TextInput>
+            </View>
+            <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="log in button"
+              accessibilityHint="logs you into the app."
+              style={styles.button}
+              onPress={() => {
+                attemptLogIn();
+              }}
+              underlayColor="#3C44A3"
+            >
+              <Text style={styles.buttonText}>Log In</Text>
+            </TouchableOpacity>
+            {error ? (
+              <Text style={{ color: "red", paddingBottom: 30, paddingTop: 10 }}>
+                {error ? error : ""}
+              </Text>
+            ) : null}
+            <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="Don't have an account"
+              accessibilityHint="Navigates you to the sign up form."
+              style={{ alignSelf: "center", padding: 10 }}
+              onPress={() => {
+                setError(null);
+                setSigningUp(true);
+              }}
+            >
+              <Text style={{ textDecorationLine: "underline" }}>
+                Don't have an account?
             </Text>
-          ) : null}
-          <TouchableOpacity
-            accessible={true}
-            accessibilityLabel="Don't have an account"
-            accessibilityHint="Navigates you to the sign up form."
-            style={{ alignSelf: "center", padding: 10 }}
-            onPress={() => {
-              setError(null);
-              setSigningUp(true);
-            }}
-          >
-            <Text style={{ textDecorationLine: "underline" }}>
-              Don't have an account?
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
+            </TouchableOpacity>
+          </View>
+        )}
     </>
   );
 };
